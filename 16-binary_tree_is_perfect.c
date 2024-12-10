@@ -1,5 +1,8 @@
 #include "binary_trees.h"
-int binary_tree_is_perfect(const binary_tree_t *tree);
+size_t binary_tree_height(const binary_tree_t *tree);
+int binary_tree_balance(const binary_tree_t *tree);
+int binary_tree_is_full(const binary_tree_t *tree);
+
 /**
  * binary_tree_is_perfect - checks if the binary tree is perfect
  * @tree: a pointer to the root of the tree
