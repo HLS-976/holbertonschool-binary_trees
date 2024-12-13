@@ -5,17 +5,18 @@
  * @tree: Pointer to the root node of the tree to measure the height
  * Return: Height of the tree, or 0 if tree is NULL
  */
-size_t binary_tree_height(const binary_tree_t *tree)
+int get_height(const binary_tree_t *tree)
 {
-	size_t left_height, right_height;
+	int l = 0, r = 0;
 
 	if (!tree)
 		return (0);
+	if (tree->left)
+		l = 1 + get_height(tree->left);
+	if (tree->right)
+		r = 1 + get_height(tree->right);
 
-	left_height = binary_tree_height(tree->left);
-	right_height = binary_tree_height(tree->right);
-
-	return (1 + (left_height > right_height ? left_height : right_height));
+	return (l > r ? l : r);
 }
 
 /**
@@ -23,32 +24,13 @@ size_t binary_tree_height(const binary_tree_t *tree)
  * @tree: Pointer to the root node of the tree to measure the size
  * Return: Size of the tree (number of nodes), or 0 if tree is NULL
  */
-size_t binary_tree_size(const binary_tree_t *tree)
+int get_size(const binary_tree_t *tree)
 {
 	if (!tree)
 		return (0);
 
-	return (1 + binary_tree_size(tree->left) + binary_tree_size(tree->right));
+	return (1 + get_size(tree->left) + get_size(tree->right));
 }
-
-/**
- * calculate_expected_size - Calculates the expected size of a perfect binary tree
- * @height: Height of the tree
- * Return: Expected size of the perfect binary tree
- */
-size_t calculate_expected_size(size_t height)
-{
-	size_t result = 1;
-
-	while (height > 0)
-	{
-		result *= 2;
-		height--;
-	}
-
-	return result - 1;
-}
-
 /**
  * binary_tree_is_perfect - Checks if a binary tree is perfect
  * @tree: Pointer to the root node of the tree to check
@@ -56,15 +38,22 @@ size_t calculate_expected_size(size_t height)
  */
 int binary_tree_is_perfect(const binary_tree_t *tree)
 {
-	size_t height, size, expected_size;
+	int height, size, pow = 0, res = 2;
 
 	if (!tree)
 		return (0);
 
-	height = binary_tree_height(tree) - 1;
-	size = binary_tree_size(tree);
+	height = get_height(tree);
+	size = get_size(tree);
 
-	expected_size = calculate_expected_size(height);
+	while (pow < height)
+	{
+		res = res * 2;
+		pow++;
+	}
 
-	return (size == expected_size);
+	if (size == res - 1)
+		return (1);
+
+	return (0);
 }
